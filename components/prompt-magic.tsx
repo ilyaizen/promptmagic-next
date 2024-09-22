@@ -96,7 +96,7 @@ export function PromptMagic() {
             Create and refine your AI prompts.
             <br />
             This project is a Work in Progress; check it out on{' '}
-            <Link href="https://github.com/ilyaizen/promptmagic" className="text-primary hover:underline">
+            <Link href="https://github.com/ilyaizen/promptmagic-next" className="text-primary hover:underline">
               GitHub
             </Link>
             .
