@@ -5,16 +5,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Copy } from 'lucide-react';
 import { ToastAction } from '@/components/ui/toast';
+import { useToast } from '@/hooks/use-toast';
 
 interface RefinePromptStepProps {
   refinedPrompt: string;
   setRefinedPrompt: (prompt: string) => void;
-  toast: (props: {
-    title: string;
-    description: string;
-    action: React.ReactNode;
-    variant?: 'default' | 'destructive';
-  }) => void;
+  toast: ReturnType<typeof useToast>['toast'];
 }
 
 export function RefinePromptStep({ refinedPrompt, setRefinedPrompt, toast }: RefinePromptStepProps) {
