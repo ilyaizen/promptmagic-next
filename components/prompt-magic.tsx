@@ -89,10 +89,18 @@ export function PromptMagic() {
               <div className="rounded-full bg-primary p-1">
                 <WandSparkles className="h-6 w-6 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold">PromptMagic</span>
+              <span className="text-xl font-bold">PromptMagic v2024-09-22</span>
             </Link>
           </CardTitle>
-          <CardDescription>Create and refine your AI prompts</CardDescription>
+          <CardDescription>
+            Create and refine your AI prompts.
+            <br />
+            This project is a Work in Progress; check it out on{' '}
+            <Link href="https://github.com/ilyaizen/promptmagic" className="text-primary hover:underline">
+              GitHub
+            </Link>
+            .
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-grow flex-col overflow-hidden">
           <div className="mb-4 flex-shrink-0">
