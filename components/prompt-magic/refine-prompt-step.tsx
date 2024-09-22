@@ -9,7 +9,12 @@ import { ToastAction } from '@/components/ui/toast';
 interface RefinePromptStepProps {
   refinedPrompt: string;
   setRefinedPrompt: (prompt: string) => void;
-  toast: any; // Replace 'any' with the correct type from your toast library
+  toast: (props: {
+    title: string;
+    description: string;
+    action: React.ReactNode;
+    variant?: 'default' | 'destructive';
+  }) => void;
 }
 
 export function RefinePromptStep({ refinedPrompt, setRefinedPrompt, toast }: RefinePromptStepProps) {
