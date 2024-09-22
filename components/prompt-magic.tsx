@@ -11,12 +11,6 @@ import { useAutocomplete } from '@/hooks/useAutocomplete';
 import { useToast } from '@/hooks/use-toast';
 import { ToastAction } from '@/components/ui/toast';
 import Link from 'next/link';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
-import rehypeSanitize from 'rehype-sanitize';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 const steps = ['Initial Prompt', 'Refine Prompt', 'Feedback', 'Export'];
 
@@ -218,27 +212,7 @@ export function PromptMagic() {
               <div className="space-y-4">
                 <div className="rounded-md bg-muted p-4">
                   <h3 className="mb-2 font-semibold">Final Prompt:</h3>
-                  <ReactMarkdown
-                    className="prose dark:prose-invert max-w-none"
-                    remarkPlugins={[remarkGfm]}
-                    rehypePlugins={[rehypeRaw, rehypeSanitize]}
-                    components={{
-                      code({ node, inline, className, children, ...props }) {
-                        const match = /language-(\w+)/.exec(className || '');
-                        return !inline && match ? (
-                          <SyntaxHighlighter style={oneDark} language={match[1]} PreTag="div" {...props}>
-                            {String(children).replace(/\n$/, '')}
-                          </SyntaxHighlighter>
-                        ) : (
-                          <code className={className} {...props}>
-                            {children}
-                          </code>
-                        );
-                      },
-                    }}
-                  >
-                    {refinedPrompt || prompt}
-                  </ReactMarkdown>
+                  <pre className="whitespace-pre-wrap">{refinedPrompt || prompt}</pre>
                 </div>
               </div>
             </div>
