@@ -1,16 +1,15 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { ArrowLeft, ArrowRight, Download, Share2, Loader2, Copy, WandSparkles } from 'lucide-react';
-import { useAutocomplete } from '@/hooks/useAutocomplete';
+import { ArrowLeft, ArrowRight, Loader2, WandSparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { ToastAction } from '@/components/ui/toast';
 import Link from 'next/link';
+import { InitialPromptStep } from '@/components/prompt-magic/initial-prompt-step';
+import { RefinePromptStep } from '@/components/prompt-magic/refine-prompt-step';
+import { FeedbackStep } from '@/components/prompt-magic/feedback-step';
+import { ExportStep } from '@/components/prompt-magic/export-step';
 
 const steps = ['Initial Prompt', 'Refine Prompt', 'Feedback', 'Export'];
 
@@ -19,23 +18,13 @@ export function PromptMagic() {
   const [prompt, setPrompt] = useState('');
   const [refinedPrompt, setRefinedPrompt] = useState('');
   const [feedback, setFeedback] = useState('');
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [cachedPrompt, setCachedPrompt] = useState('');
   const { toast } = useToast();
 
-  const { suggestion, isCompleting, getSuggestion, clearSuggestion, handleKeyDown } = useAutocomplete();
-
-  const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value;
-    setPrompt(newValue);
-    getSuggestion(newValue, e.target.selectionStart);
-  };
-
   const refinePrompt = useCallback(async () => {
     setIsLoading(true);
     try {
-      console.log('Sending prompt for refinement:', prompt); // Debug log
       const response = await fetch('/api/ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -45,7 +34,6 @@ export function PromptMagic() {
         throw new Error(`Failed to refine prompt: ${response.status} ${response.statusText}`);
       }
       const data = await response.json();
-      console.log('Received refined prompt data:', data); // Debug log
       if (data.refinedContent) {
         setRefinedPrompt(data.refinedContent);
         setCachedPrompt(prompt);
@@ -59,13 +47,6 @@ export function PromptMagic() {
       setIsLoading(false);
     }
   }, [prompt]);
-
-  const handleSuggestionClick = () => {
-    if (suggestion) {
-      setPrompt((prev) => prev + suggestion);
-      clearSuggestion();
-    }
-  };
 
   const handleNext = async () => {
     if (currentStep === 0) {
@@ -84,150 +65,16 @@ export function PromptMagic() {
     }
   };
 
-  const handleExport = () => {
-    const exportData = {
-      initialPrompt: prompt,
-      refinedPrompt: refinedPrompt,
-      feedback: feedback,
-    };
-    const dataStr = JSON.stringify(exportData);
-    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-    const exportFileDefaultName = 'prompt-magic-export.json';
-
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-  };
-
-  const copyToClipboard = () => {
-    navigator.clipboard
-      .writeText(refinedPrompt)
-      .then(() => {
-        toast({
-          title: 'Copied to clipboard',
-          description: 'The refined prompt has been copied to your clipboard.',
-          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-        });
-      })
-      .catch((err) => {
-        console.error('Failed to copy text: ', err);
-        toast({
-          title: 'Failed to copy',
-          description: 'An error occurred while copying to clipboard.',
-          variant: 'destructive',
-          action: <ToastAction altText="Try again">Try again</ToastAction>,
-        });
-      });
-  };
-
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return (
-          <div className="flex h-full flex-col">
-            <div className="relative flex-grow">
-              <Textarea
-                ref={textareaRef}
-                placeholder="Enter your initial prompt here..."
-                value={prompt}
-                onChange={handlePromptChange}
-                onKeyDown={(e) => {
-                  handleKeyDown(e);
-                  if (e.key === 'Tab' && suggestion) {
-                    e.preventDefault();
-                    setPrompt((prev) => prev + suggestion);
-                    clearSuggestion();
-                  }
-                }}
-                className="h-full resize-none"
-              />
-              {suggestion && !isCompleting && (
-                <div
-                  className="hover:bg-muted-hover absolute bottom-2 right-2 cursor-pointer rounded bg-muted px-2 py-1 text-sm text-muted-foreground"
-                  onClick={handleSuggestionClick}
-                >
-                  {suggestion}
-                </div>
-              )}
-              {isCompleting && (
-                <div className="absolute bottom-2 right-2 rounded bg-muted px-2 py-1 text-sm text-muted-foreground">
-                  Thinking...
-                </div>
-              )}
-            </div>
-          </div>
-        );
+        return <InitialPromptStep prompt={prompt} setPrompt={setPrompt} />;
       case 1:
-        return (
-          <div className="flex h-full flex-col">
-            <div className="relative flex-grow">
-              <Textarea
-                ref={textareaRef}
-                placeholder="Refined prompt..."
-                value={refinedPrompt}
-                onChange={(e) => setRefinedPrompt(e.target.value)}
-                className="h-full resize-none"
-              />
-              <Button variant="outline" size="icon" className="absolute bottom-2 right-2" onClick={copyToClipboard}>
-                <Copy className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        );
+        return <RefinePromptStep refinedPrompt={refinedPrompt} setRefinedPrompt={setRefinedPrompt} toast={toast} />;
       case 2:
-        return (
-          <div className="space-y-4">
-            <Label htmlFor="feedback">How satisfied are you with the refined prompt?</Label>
-            <RadioGroup id="feedback" value={feedback} onValueChange={setFeedback}>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="very-satisfied" id="very-satisfied" />
-                <Label htmlFor="very-satisfied">Very Satisfied</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="satisfied" id="satisfied" />
-                <Label htmlFor="satisfied">Satisfied</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="neutral" id="neutral" />
-                <Label htmlFor="neutral">Neutral</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="unsatisfied" id="unsatisfied" />
-                <Label htmlFor="unsatisfied">Unsatisfied</Label>
-              </div>
-            </RadioGroup>
-            <Textarea
-              placeholder="Any additional feedback or suggestions for improvement?"
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
-              className="min-h-[100px]"
-            />
-          </div>
-        );
+        return <FeedbackStep feedback={feedback} setFeedback={setFeedback} />;
       case 3:
-        return (
-          <div className="flex h-full flex-col">
-            <div className="flex-grow overflow-y-auto">
-              <div className="space-y-4">
-                <div className="rounded-md bg-muted p-4">
-                  <h3 className="mb-2 font-semibold">Final Prompt:</h3>
-                  <pre className="whitespace-pre-wrap">{refinedPrompt || prompt}</pre>
-                </div>
-              </div>
-            </div>
-            <div className="mt-4 flex flex-col space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0">
-              <Button onClick={handleExport} className="flex items-center justify-center space-x-2">
-                <Download className="h-4 w-4" />
-                <span>Export JSON</span>
-              </Button>
-              <Button variant="outline" className="flex items-center justify-center space-x-2">
-                <Share2 className="h-4 w-4" />
-                <span>Share</span>
-              </Button>
-            </div>
-          </div>
-        );
+        return <ExportStep refinedPrompt={refinedPrompt} prompt={prompt} />;
       default:
         return null;
     }
