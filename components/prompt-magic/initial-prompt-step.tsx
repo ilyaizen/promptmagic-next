@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { useAutocomplete } from '@/hooks/useAutocomplete';
 
@@ -10,8 +10,16 @@ interface InitialPromptStepProps {
 }
 
 export function InitialPromptStep({ prompt, setPrompt }: InitialPromptStepProps) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { suggestion, isCompleting, getSuggestion, clearSuggestion, handleKeyDown } = useAutocomplete();
+  const {
+    suggestion,
+    isCompleting,
+    getSuggestion,
+    clearSuggestion,
+    handleKeyDown,
+    textareaRef,
+    suggestionOverlayRef,
+    updateSuggestionPosition,
+  } = useAutocomplete();
 
   const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
@@ -19,12 +27,9 @@ export function InitialPromptStep({ prompt, setPrompt }: InitialPromptStepProps)
     getSuggestion(newValue, e.target.selectionStart);
   };
 
-  const handleSuggestionClick = () => {
-    if (suggestion) {
-      setPrompt(prompt + suggestion);
-      clearSuggestion();
-    }
-  };
+  useEffect(() => {
+    updateSuggestionPosition();
+  }, [prompt, suggestion, updateSuggestionPosition]);
 
   return (
     <div className="flex h-full flex-col">
@@ -44,14 +49,7 @@ export function InitialPromptStep({ prompt, setPrompt }: InitialPromptStepProps)
           }}
           className="h-full resize-none"
         />
-        {suggestion && !isCompleting && (
-          <div
-            className="hover:bg-muted-hover absolute bottom-2 right-2 cursor-pointer rounded bg-muted px-2 py-1 text-sm text-muted-foreground"
-            onClick={handleSuggestionClick}
-          >
-            {suggestion}
-          </div>
-        )}
+        <div ref={suggestionOverlayRef} className="pointer-events-none absolute inset-0 overflow-hidden" />
         {isCompleting && (
           <div className="absolute bottom-2 right-2 rounded bg-muted px-2 py-1 text-sm text-muted-foreground">
             Thinking...

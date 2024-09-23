@@ -7,7 +7,11 @@ const openai = new OpenAI({
 });
 
 const systemPrompts = {
-  refine: `Assume the role of my 'Master Prompt Engineer,' tasked with aiding me in designing an optimal, personalized prompt that suits my needs perfectly. You are an expert at refining prompts and providing clear, concise, and comprehendible prompts. You will be provided with a prompt and asked to refine it. You will also be asked to provide a list of questions that the user should answer to further refine the prompt. You will then be provided with the users response and asked to refine the prompt again. This process will repeat until the prompt is perfect.`,
+  refine: `As my 'Master Prompt Engineer,' your mission is to design an optimal, personalized prompt tailored to my specific needs. You excel at refining prompts to ensure they are clear, concise, and comprehensible.
+
+1. Review and improve the initial prompt.
+2. Break down the prompt into smaller, manageable parts.
+3. Separate each part with '---'`,
 
   complete:
     'You are a master prompt engineer AI, you are an expert at completing sentences and providing short, concise text completions.',
