@@ -10,8 +10,7 @@ const systemPrompts = {
   refine: `As my 'Master Prompt Engineer,' your mission is to design an optimal, personalized prompt tailored to my specific needs. You excel at refining prompts to ensure they are clear, concise, and comprehensible.
 
 1. Review and improve the initial prompt.
-2. Break down the prompt into smaller, manageable parts.
-3. Separate each part with '---'`,
+2. Break down the prompt into smaller, manageable parts.`,
 
   complete:
     'You are a master prompt engineer AI, you are an expert at completing sentences and providing short, concise text completions.',
@@ -25,7 +24,7 @@ type Message = {
 
 export async function POST(req: Request) {
   const { text, action } = await req.json();
-  console.log('Received request:', { text, action }); // Debug log
+  // console.log('Received request:', { text, action }); // Debug log
 
   try {
     let messages, maxTokens, temperature, n, stop;
@@ -44,11 +43,11 @@ export async function POST(req: Request) {
           { role: 'system', content: systemPrompts.complete },
           {
             role: 'user',
-            content: `Complete the sentence precisely (max 7 words): "${text}". Do not include the original text or any other text or characters.`,
+            content: `Complete the sentence precisely (max 8 words): "${text}". Do not include the original text or any other text or characters.`,
           },
         ];
-        maxTokens = 16;
-        temperature = 0.2;
+        maxTokens = 32;
+        temperature = 0.6;
         n = 1;
         stop = ['.', '!', '?', '\n'];
         break;
@@ -56,7 +55,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
 
-    console.log('Sending request to OpenAI:', { messages, maxTokens, temperature }); // Debug log
+    // console.log('Sending request to OpenAI:', { messages, maxTokens, temperature }); // Debug log
 
     const typedMessages: ChatCompletionMessageParam[] = messages.map(
       (msg: Message) =>
@@ -75,11 +74,11 @@ export async function POST(req: Request) {
       ...(stop && { stop }),
     });
 
-    console.log('Received response from OpenAI:', response); // Debug log
+    // console.log('Received response from OpenAI:', response); // Debug log
 
     const content = response.choices[0]?.message.content?.trim() || '';
 
-    console.log('Sending response:', { [action === 'refine' ? 'refinedContent' : 'suggestion']: content }); // Debug log
+    // console.log('Sending response:', { [action === 'refine' ? 'refinedContent' : 'suggestion']: content }); // Debug log
 
     return NextResponse.json({
       [action === 'refine' ? 'refinedContent' : 'suggestion']: content,

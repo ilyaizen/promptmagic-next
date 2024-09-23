@@ -89,7 +89,7 @@ export function PromptMagic() {
               <div className="rounded-full bg-primary p-1">
                 <WandSparkles className="h-6 w-6 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold">PromptMagic v2024-09-22</span>
+              <span className="text-xl font-bold">PromptMagic v2024-09-23</span>
             </Link>
           </CardTitle>
           <CardDescription>
