@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, ArrowRight, Loader2, WandSparkles } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+// import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { InitialPromptStep } from '@/components/prompt-magic/initial-prompt-step';
 import { RefinePromptStep } from '@/components/prompt-magic/refine-prompt-step';
@@ -20,7 +20,7 @@ export function PromptMagic() {
   const [feedback, setFeedback] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [cachedPrompt, setCachedPrompt] = useState('');
-  const { toast } = useToast();
+  // const { toast } = useToast();
 
   const refinePrompt = useCallback(async () => {
     setIsLoading(true);
@@ -70,7 +70,7 @@ export function PromptMagic() {
       case 0:
         return <InitialPromptStep prompt={prompt} setPrompt={setPrompt} />;
       case 1:
-        return <RefinePromptStep refinedPrompt={refinedPrompt} setRefinedPrompt={setRefinedPrompt} toast={toast} />;
+        return <RefinePromptStep refinedPrompt={refinedPrompt} setRefinedPrompt={setRefinedPrompt} />;
       case 2:
         return <FeedbackStep feedback={feedback} setFeedback={setFeedback} />;
       case 3:

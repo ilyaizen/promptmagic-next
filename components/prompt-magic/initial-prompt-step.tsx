@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { useAutocomplete } from '@/hooks/useAutocomplete';
 
