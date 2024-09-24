@@ -15,12 +15,10 @@ interface RefinePromptStepProps {
 export function RefinePromptStep({ refinedPrompt, setRefinedPrompt }: RefinePromptStepProps) {
   const { toast } = useToast();
 
-  // Function to copy the entire refined prompt to clipboard
   const copyToClipboard = () => {
     navigator.clipboard
       .writeText(refinedPrompt)
       .then(() => {
-        // Show success toast
         toast({
           title: 'Copied to clipboard',
           description: 'The refined prompt has been copied to your clipboard.',
@@ -29,7 +27,6 @@ export function RefinePromptStep({ refinedPrompt, setRefinedPrompt }: RefineProm
       })
       .catch((err) => {
         console.error('Failed to copy text: ', err);
-        // Show error toast
         toast({
           title: 'Failed to copy',
           description: 'An error occurred while copying to clipboard.',
@@ -40,7 +37,7 @@ export function RefinePromptStep({ refinedPrompt, setRefinedPrompt }: RefineProm
   };
 
   return (
-    <div className="flex h-full flex-col space-y-4">
+    <div className="flex h-full flex-col">
       <div className="relative flex-grow">
         <Textarea
           placeholder="Enter your prompt..."
@@ -48,10 +45,10 @@ export function RefinePromptStep({ refinedPrompt, setRefinedPrompt }: RefineProm
           onChange={(e) => setRefinedPrompt(e.target.value)}
           className="h-full resize-none"
         />
+        <Button variant="outline" size="sm" className="absolute bottom-2 left-2" onClick={copyToClipboard}>
+          <Copy className="mr-2 h-4 w-4" /> Copy
+        </Button>
       </div>
-      <Button variant="outline" className="self-end" onClick={copyToClipboard}>
-        <Copy className="mr-2 h-4 w-4" /> Copy All
-      </Button>
     </div>
   );
 }

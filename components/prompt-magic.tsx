@@ -4,7 +4,6 @@ import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, ArrowRight, Loader2, WandSparkles } from 'lucide-react';
-// import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { InitialPromptStep } from '@/components/prompt-magic/initial-prompt-step';
 import { RefinePromptStep } from '@/components/prompt-magic/refine-prompt-step';
@@ -20,7 +19,6 @@ export function PromptMagic() {
   const [feedback, setFeedback] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [cachedPrompt, setCachedPrompt] = useState('');
-  // const { toast } = useToast();
 
   const refinePrompt = useCallback(async () => {
     setIsLoading(true);
@@ -89,7 +87,7 @@ export function PromptMagic() {
               <div className="rounded-full bg-primary p-1">
                 <WandSparkles className="h-6 w-6 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold">PromptMagic v2024-09-23</span>
+              <span className="text-xl font-bold">PromptMagic v2024-09-24</span>
             </Link>
           </CardTitle>
           <CardDescription>
