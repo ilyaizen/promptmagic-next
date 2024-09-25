@@ -2,7 +2,7 @@
 
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Copy } from 'lucide-react';
+import { Copy, RotateCcw } from 'lucide-react';
 import { ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/hooks/use-toast';
 
@@ -45,9 +45,14 @@ export function RefinePromptStep({ refinedPrompt, setRefinedPrompt }: RefineProm
           onChange={(e) => setRefinedPrompt(e.target.value)}
           className="h-full resize-none"
         />
-        <Button variant="outline" size="sm" className="absolute bottom-2 left-2" onClick={copyToClipboard}>
-          <Copy className="mr-2 h-4 w-4" /> Copy
-        </Button>
+        <div className="absolute bottom-2 left-2 flex space-x-2">
+          <Button variant="outline" size="sm" onClick={copyToClipboard}>
+            <Copy className="mr-2 h-4 w-4" /> Copy
+          </Button>
+          <Button variant="outline" size="sm">
+            <RotateCcw className="mr-2 h-4 w-4" /> Iterate
+          </Button>
+        </div>
       </div>
     </div>
   );
