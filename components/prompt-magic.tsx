@@ -63,12 +63,23 @@ export function PromptMagic() {
     }
   };
 
+  const handleIterate = useCallback((newPrompt: string) => {
+    setPrompt(newPrompt);
+    setCurrentStep(0);
+  }, []);
+
   const renderStep = () => {
     switch (currentStep) {
       case 0:
         return <InitialPromptStep prompt={prompt} setPrompt={setPrompt} />;
       case 1:
-        return <RefinePromptStep refinedPrompt={refinedPrompt} setRefinedPrompt={setRefinedPrompt} />;
+        return (
+          <RefinePromptStep
+            refinedPrompt={refinedPrompt}
+            setRefinedPrompt={setRefinedPrompt}
+            onIterate={handleIterate}
+          />
+        );
       case 2:
         return <FeedbackStep feedback={feedback} setFeedback={setFeedback} />;
       case 3:

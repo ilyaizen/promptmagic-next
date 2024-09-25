@@ -10,9 +10,10 @@ import { useToast } from '@/hooks/use-toast';
 interface RefinePromptStepProps {
   refinedPrompt: string;
   setRefinedPrompt: (prompt: string) => void;
+  onIterate: (prompt: string) => void;
 }
 
-export function RefinePromptStep({ refinedPrompt, setRefinedPrompt }: RefinePromptStepProps) {
+export function RefinePromptStep({ refinedPrompt, setRefinedPrompt, onIterate }: RefinePromptStepProps) {
   const { toast } = useToast();
 
   const copyToClipboard = () => {
@@ -36,6 +37,10 @@ export function RefinePromptStep({ refinedPrompt, setRefinedPrompt }: RefineProm
       });
   };
 
+  const handleIterate = () => {
+    onIterate(refinedPrompt);
+  };
+
   return (
     <div className="flex h-full flex-col">
       <div className="relative flex-grow">
@@ -49,7 +54,7 @@ export function RefinePromptStep({ refinedPrompt, setRefinedPrompt }: RefineProm
           <Button variant="outline" size="sm" onClick={copyToClipboard}>
             <Copy className="mr-2 h-4 w-4" /> Copy
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={handleIterate}>
             <RotateCcw className="mr-2 h-4 w-4" /> Iterate
           </Button>
         </div>

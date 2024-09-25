@@ -10,7 +10,8 @@ const systemPrompts = {
   refine: `As my 'Master Prompt Engineer,' your mission is to design an optimal, personalized prompt tailored to my specific needs. You excel at refining prompts to ensure they are clear, concise, and comprehensible.
 
 1. Review and improve the initial prompt.
-2. Break down the prompt into smaller, manageable parts.`,
+2. Break down the prompt into smaller, manageable parts.
+3. Answer with the refined prompt only.`,
 
   complete:
     'You are a master prompt engineer AI, you are an expert at completing sentences and providing short, concise text completions.',
