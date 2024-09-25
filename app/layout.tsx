@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Prompt Magic',
+  title: 'PromptMagic',
   description: 'Generate prompts with AI',
 };
 
